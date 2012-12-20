@@ -116,6 +116,23 @@ describe('Hawk', function () {
             });
         });
 
+        it('should parse a valid authentication header in query string', function (done) {
+
+            var req = {
+                headers: {
+                    host: 'example.com:8080'
+                },
+                method: 'GET',
+                url: '/resource/4?filter=a&hawk=' + encodeURIComponent('Hawk id="123", ts="1353788437", mac="/qwS4UjfVWMcUyW6EEgUH4jlr7T/wuKe3dKijvTvSos=", ext="hello"')
+            };
+
+            Hawk.authenticate(req, credentialsFunc, {}, function (err, credentials, ext) {
+                if(err) return done(err);
+                expect(credentials.user).to.equal('steve');
+                done();
+            });
+        });
+
         it('should fail on an invalid authentication header: wrong scheme', function (done) {
 
             var req = {
