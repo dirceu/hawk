@@ -76,6 +76,25 @@ describe('Utils', () => {
             done();
         });
 
+        it('returns port 443 for x-forwarded-proto https request', (done) => {
+
+            const req = {
+                method: 'POST',
+                url: '/resource/4?filter=a',
+                headers: {
+                    host: 'example.com',
+                    'content-type': 'text/plain;x=y',
+                    'x-forwarded-proto': 'https'
+                },
+                connection: {
+                    encrypted: false
+                }
+            };
+
+            expect(Hawk.utils.parseHost(req, 'Host').port).to.equal(443);
+            done();
+        });
+
         it('parses IPv6 headers', (done) => {
 
             const req = {
